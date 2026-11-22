@@ -5,7 +5,9 @@ The Delphi application and its files are not used or modified.
 
 ## Run
 
-Open bin\Release\Carillon.WpfPrototype.exe. The prototype targets .NET 9 Desktop.
+In the packaged ZIP, extract all files and open Carillon.WpfPrototype.exe.
+In this source project, open bin\Release\Carillon.WpfPrototype.exe.
+The prototype targets .NET 9 Desktop.
 Build from the project folder with:
 
     dotnet build -c Release
