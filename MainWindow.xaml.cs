@@ -35,7 +35,11 @@ public partial class MainWindow : Window
         {
             var elapsed = previewPosition + previewClock.Elapsed.TotalSeconds;
             PlayerProgress.Value = elapsed;
-            if (elapsed >= 3) StopPreview();
+            if (elapsed >= 3)
+            {
+                StopPreview();
+                model.Status = "Bell preview finished.";
+            }
         };
         Loaded += (_, _) => SongGrid.ScrollIntoView(model.SelectedSong);
         Closing += (_, _) => StopPreview();

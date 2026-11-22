@@ -72,6 +72,7 @@ public sealed class PrototypeModel : INotifyPropertyChanged
     public string TodayLabel => DateTime.Today.ToString("dddd, MMMM d, yyyy", CultureInfo.GetCultureInfo("en-US")) + "  /  Main-screen concept";
     public ObservableCollection<string> ScheduleRows { get; } = [];
     public string ScheduleCountLabel => ScheduleRows.Count + " scheduled play times";
+    public string NextBellLabel { get; private set; } = "Schedule paused";
     public bool ScheduleEnabled { get; set; } = true;
 
     public PrototypeModel()
@@ -130,7 +131,13 @@ public sealed class PrototypeModel : INotifyPropertyChanged
     public void RebuildSchedule()
     {
         ScheduleRows.Clear();
-        if (!ScheduleEnabled) { Changed(nameof(ScheduleCountLabel)); return; }
+        if (!ScheduleEnabled)
+        {
+            NextBellLabel = "Schedule paused";
+            Changed(nameof(NextBellLabel));
+            Changed(nameof(ScheduleCountLabel));
+            return;
+        }
         var dayIndex = ((int)DateTime.Today.DayOfWeek + 6) % 7;
         var entries = new List<(TimeOnly Time, string Song)>();
         foreach (var song in Songs)
@@ -146,6 +153,10 @@ public sealed class PrototypeModel : INotifyPropertyChanged
         }
         foreach (var entry in entries.OrderBy(entry => entry.Time))
             ScheduleRows.Add(entry.Time.ToString("h:mm tt", CultureInfo.GetCultureInfo("en-US")) + "    " + entry.Song);
+        var next = entries.OrderBy(entry => entry.Time).FirstOrDefault(entry => entry.Time >= TimeOnly.FromDateTime(DateTime.Now));
+        NextBellLabel = next.Song is null ? "No more demo bells today" :
+            next.Time.ToString("h:mm tt", CultureInfo.GetCultureInfo("en-US")) + " / " + next.Song;
+        Changed(nameof(NextBellLabel));
         Changed(nameof(ScheduleCountLabel));
     }
 
