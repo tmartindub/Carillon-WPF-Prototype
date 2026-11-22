@@ -1,0 +1,6 @@
+bin/
+dcu/
+obj/
+.vs/
+*.user
+*.zip
